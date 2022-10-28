@@ -2,7 +2,6 @@ from flask import  jsonify, request ,Blueprint
 from flask_cors import CORS  
 import psycopg2
 import re
-import pyrebase
 import os
 import random
 
@@ -23,41 +22,10 @@ conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER,
                         password=DB_PASS, host=DB_HOST)
 
 print("CONNECTED SUCCESSFULLY")
-urlsend = ''
-config = {
-    "apiKey": "AIzaSyB1QbSomFK8Z7BxuwL7XTCnHLd21fGu6qk",
-  "authDomain": "shopperz-85b8e.firebaseapp.com",
-  "projectId": "shopperz-85b8e",
-  "databaseURL": "https://shopperz-85b8e.firebaseio.com",
-  "storageBucket": "shopperz-85b8e.appspot.com",
-  "messagingSenderId": "792087668774",
-  "appId": "1:792087668774:web:f807c66c66d4dd49cbdee7",
-  "measurementId": "G-81H8RPM9RJ"
-}
 
 sellers = Blueprint('sellers', __name__)
 CORS(sellers)
 
-def Getprofile(profileimg):
-    firebase = pyrebase.initialize_app(config)
-    storage = firebase.storage()
-    my_image = profileimg
-    auth = firebase.auth()
-    email = "pavankumar.online1@gmail.com"
-    password = "1234567"
-    user = auth.sign_in_with_email_and_password(email, password)
-    url = storage.child(my_image).get_url(user['idToken'])
-    urlsend = url
-    return urlsend
-    
-
-
-def UploadProfile(Sellerimg,imagename):
-    firebase = pyrebase.initialize_app(config)
-    # storage = firebase.storage()
-    firebase.storage().put(Sellerimg)
-    # storage.child(imagename).put(Sellerimg)
-    print("Uploaded")
 
 
 @sellers.route('/login',methods=['POST', 'GET'])
@@ -198,76 +166,7 @@ def register():
         resp.status_code = 400
         return resp
 
-@sellers.route('/sellerregisterwithprofile',methods=['POST', 'GET'])
-def sellerregister():
 
-    # args = request.args
-    # _username = args.get("username")
-    # _emailid = args.get("email_id")
-    # _password = args.get("password")
-    # _profile = request.files['profileimage']
-    # print(_username, _emailid, _password)
-    # requesting values from the user to login
-    
-    _username = request.form.get("username")
-    _emailid = request.form.get("email_id")
-    _password = request.form.get("password")
-    _profile = request.files['profileimage']
-    print(_username, _emailid, _password)
-    
-    # Path=os.path.join(os.getcwd()+_profile)
-   
-    # _profile.save(Path)
-    print(_profile.filename,"***FILENAMEEEE***")
-    if request.method == 'POST':
-        if _username and _password and _emailid and _profile :
-            if(re.search(email_valid, _emailid)):
-                cursor = conn.cursor()
-                abort="rollback"
-                cursor.execute(abort)
-                
-                cursor.execute("SELECT * FROM sellers WHERE email_id ='{0}'".format(_emailid))
-                        
-                if cursor.fetchone() is not None:
-                    resp = jsonify(
-                                {'message': 'Entered email id already exist , Please login', 'alreadyexist': True, "status": False})
-                    resp.status_code = 200
-                    return resp
-                imgnum = random.randint(0,1000)
-                UploadProfile(_profile,imgnum)
-                sql = "INSERT INTO sellers (username , password , email_id , profileimage)  VALUES ('{0}' ,'{1}' ,'{2}','{3}')".format(
-                            _username, _password, _emailid,_profile.filename)
-                print("INSERTED THE DATA")
-                cursor.execute(sql)
-                    
-                conn.commit()
-                cursor.close()
-                resp = jsonify(
-                            {'message': 'Account Created Successfully' , "status": True})
-                resp.status_code = 200
-                return resp
-
-            # For checking the invalid email
-            else:
-                resp = jsonify(
-                    {'message': 'Please enter valid email id', 'status': False})
-                resp.status_code = 200
-                return resp
-
-        # For empty values of email , password , username
-        elif _username == '' or _password == '' or _emailid == '' or _profile=='':
-            resp = jsonify(
-                {'message': 'Please enter missed keys', 'status': False})
-            resp.status_code = 200
-            return resp
-    elif request.method == 'GET':
-        resp = jsonify(
-            {'message': 'Bad Request! , Please check your request method', 'status': False})
-        resp.status_code = 400
-        return resp
-
-
-  
 
 @sellers.route('/sellerform',methods=['POST', 'GET'])
 def sellerform():
