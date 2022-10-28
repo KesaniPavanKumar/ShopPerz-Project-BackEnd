@@ -65,13 +65,7 @@ def login():
             if row:
                 if (_password==password):
                     if profile:
-                        firebase = pyrebase.initialize_app(config)
-                        storage = firebase.storage()
-                        auth = firebase.auth()
-                        email = "pavankumar.online1@gmail.com"
-                        password = "1234567"
-                        user = auth.sign_in_with_email_and_password(email, password)
-                        url = storage.child(profile).get_url(user['idToken'])
+                        url=""
                         cursor.close()
                         resp = jsonify({'message': 'Login Successfully','seller_id': user_id, 'email_id': email,'username':username, 'profile':url,'status': True})
                         resp.status_code = 200
