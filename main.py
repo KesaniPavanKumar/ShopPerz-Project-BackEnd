@@ -12,10 +12,10 @@ import random
 # DB_PASS = "123456"
   
 #Cloud Database connection
-DB_HOST = "ec2-3-229-252-6.compute-1.amazonaws.com"
-DB_NAME = "dagfpiae0lkrcd"
-DB_USER = "zbhxrnradirdjh"
-DB_PASS = "5dca84590f5d78322f5b9091e8333596516a03058d49b91cd48d774f18b41230"  
+DB_HOST = "floppy.db.elephantsql.com"
+DB_NAME = "tjkicypl"
+DB_USER = "tjkicypl"
+DB_PASS = "dZ6SKvQZZZKOGm5zyfhCwa_R4jbDTZ3O"
 
 # Connecting postgresql database to the python
 conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER,
@@ -52,7 +52,7 @@ def login():
                 username = row['username']
                 user_id = row['user_id']
                 password = row['password']
-                profile=row['profileimage']
+                # profile=row['profileimage']
                 
             except:
                 pass
@@ -64,18 +64,12 @@ def login():
             # checking the user password is correct or not
             if row:
                 if (_password==password):
-                    if profile:
-                        url=""
-                        cursor.close()
-                        resp = jsonify({'message': 'Login Successfully','seller_id': user_id, 'email_id': email,'username':username, 'profile':url,'status': True})
-                        resp.status_code = 200
-                        return resp
-                    else:
-                        url=""
-                        cursor.close()
-                        resp = jsonify({'message': 'Login Successfully','seller_id': user_id, 'email_id': email,'username':username, 'profile':url,'status': True})
-                        resp.status_code = 200
-                        return resp                    
+                    
+                    url=""
+                    cursor.close()
+                    resp = jsonify({'message': 'Login Successfully','seller_id': user_id, 'email_id': email,'username':username, 'profile':url,'status': True})
+                    resp.status_code = 200
+                    return resp                    
 
                 # for invalid password 
                 else:
