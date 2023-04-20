@@ -1,0 +1,50 @@
+CREATE TABLE sellers (
+	user_id serial PRIMARY KEY,
+	username VARCHAR ( 50 )  NOT NULL,
+	password VARCHAR ( 500 ) NOT NULL,
+	email_id VARCHAR ( 255 ) UNIQUE NOT NULL
+);
+
+
+CREATE TABLE usersaddcart (
+	email_id VARCHAR ( 255 ) NOT NULL,
+	product_id integer 
+);
+
+
+CREATE TABLE users (
+	user_id serial PRIMARY KEY NOT NULL,
+	email_id VARCHAR ( 255 ) UNIQUE NOT NULL,
+	password VARCHAR ( 500 ) NOT NULL
+	
+);
+
+
+
+CREATE TABLE productdetails (
+	product_id integer PRIMARY KEY NOT NULL,
+	productname VARCHAR ( 255 ) NOT NULL,
+	productdescrb cL,
+	productprice integer ,
+	imgurl VARCHAR ( 500 ) NOT NULL,
+	category text ,
+	addcart boolean
+	
+);
+
+
+CREATE TABLE orders (
+	product_id integer,
+	order_date TIMESTAMP,
+	ship_date date,
+	address text,
+	is_delivered boolean DEFAULT FALSE,
+	email_id VARCHAR (50),
+	user_id integer
+	
+);
+
+
+ALTER ROLE tjkicypl CONNECTION LIMIT 100;
+
+
