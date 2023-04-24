@@ -22,7 +22,7 @@ conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER,
 print("CONNECTED SUCCESSFULLY")
 
 # Open the CSV file and read the data
-with open(r'C:\Users\kpava\Downloads\pdp_ajio_2023_04_17_Ajio_Mandatory.csv', 'r',encoding='iso-8859-1') as file:
+with open(r'C:\Users\kpava\Downloads\plp_3_platforms_2023_04_18_AmazonPLP_Output_batch_1.csv', 'r',encoding='iso-8859-1') as file:
     reader = csv.reader(file)
     next(reader) # Skip the header row
     rows = [row for row in reader]
