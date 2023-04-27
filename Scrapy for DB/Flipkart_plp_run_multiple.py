@@ -71,15 +71,15 @@ class FlipkartpdpSpider(sp.Spider):
         response_url=[]
 
         Product_descrb = generate_descrb()
+        
+       
 
         for i in range(1, len_main_div+1):
             temp_dict = {}
+            Price = random.randint(500, 900)
+            print("PRICEEEEEEEEEEEEEEEEEEEEE",Price)
+            temp_dict.update({"productprice": Price})
             for key in self.xpaths_df:
-                temp_dict.update({"category":response.meta['KeyName']})
-                temp_dict.update({"productdescrb":Product_descrb})
-                temp_dict.update({"productprice":random.randint(500, 900)})
-                
-
                 try:
                     product_xpath = self.main_div_xpath + str([i]) + self.xpaths_df[key]
                     # if (key == 'productprice'):
@@ -89,35 +89,22 @@ class FlipkartpdpSpider(sp.Spider):
                     #         productprice += v
                     #     temp_dict.update({key: productprice if productprice != '' else ''})
 
-                    if (key == 'imgurl'):
-                        val = response.xpath(product_xpath).get()
-                        temp_dict.update(
-                            {key: val if val != None and val != '' else ''})
-
-                    elif (key == 'productname'):
+                    
+                    
+                    if (key == 'productname'):
                         product_xpath = '('+self.main_div_xpath + str([i])+')'+self.xpaths_df[key]
                         val = response.xpath(product_xpath+'/text()').get()
                         if (val == 'None' or val == '' or val == None):
                             product_xpath = '('+self.main_div_xpath + str([i])+')'+'//*[@class="IRpwTa _2-ICcC"]'
                             val = response.xpath(product_xpath+'/text()').get()
                         temp_dict.update({key: val})
-
-                    # elif (key == 'Platform Sponsored'):
-                    #     val = response.xpath(product_xpath).get()
-                    #     temp_dict.update(
-                    #         {key: 'f_assured' if val != None and val != '' else ''})
-
-                    # elif (key == 'Product URL'):
-                    #     Base_URL = 'https://www.flipkart.com'
-                    #     val = response.xpath(product_xpath).get()
-                    #     temp_dict.update(
-                    #         {key: Base_URL+val if val != None and val != '' else ''})
+                        temp_dict.update({"productdescrb":Product_descrb})
+                    elif (key == 'imgurl'):
+                        val = response.xpath(product_xpath).get()
+                        temp_dict.update({key: val if val != None and val != '' else ''})
                         
-                    # elif(key=='Product Id'):
-                    #     val=response.xpath(product_xpath).get()
-                    #     val=val.split("pid=")[1].split("&lid")[0]
-                    #     temp_dict.update({key:val if val!=None and val != '' else ''})
-
+                        temp_dict.update({"category":response.meta['KeyName']})
+                        temp_dict.update({"addedby":random.randint(4,6)})
                     else:
                         val = response.xpath(product_xpath + '/text()').get()
                         temp_dict.update(
@@ -149,14 +136,14 @@ writer.close()
 ########################### Filtering a data and removing of unneccesary rows(Post Processing) ####################################
 output_df = pd.read_excel("FlipkartPLP_OutputData.xlsx")
 # output_df['Price'] = output_df['Price'].str.replace("₹", '')
-output_df['productprice'] = output_df['productprice'].str.replace("₹", '')
+# output_df['productprice'] = output_df['productprice'].str.replace("₹", '')
 # output_df['Discount'] = output_df['Discount'].str.replace(
 #     '%', '').str.replace('off', '')
 # output_df['Deal Text'] = output_df['Deal Text'].str.replace('\d+', '').str.replace('₹,','').str.replace('₹','')
 
 
 output_df.sort_values(by='category', inplace=True)
-output_df['Rank'] = 1
+
 prev_category = None
 
 # logic to add rank for specific category

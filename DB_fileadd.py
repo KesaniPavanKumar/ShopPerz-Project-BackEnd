@@ -22,7 +22,7 @@ conn = psycopg2.connect(dbname=DB_NAME, user=DB_USER,
 print("CONNECTED SUCCESSFULLY")
 
 # Open the CSV file and read the data
-with open(r'C:\Users\kpava\Downloads\plp_3_platforms_2023_04_18_AmazonPLP_Output_batch_1.csv', 'r',encoding='iso-8859-1') as file:
+with open(r'D:\Total Data\Mini Projects\ShopPerz-Project-BackEnd\Scrapy for DB\Flipkart_OutputData.csv', 'r',encoding='iso-8859-1') as file:
     reader = csv.reader(file)
     next(reader) # Skip the header row
     rows = [row for row in reader]
@@ -35,11 +35,15 @@ query = '''INSERT INTO productdetails (productname , productdescrb , imgurl , pr
 
 # Execute the SQL query for each row of data
 for row in rows:
+    print(row)
     cur.execute(query, row)
+    
+    # Commit the changes to the database
+    conn.commit()
 
-# Commit the changes to the database
-conn.commit()
-
-# Close the cursor and connection
+    # Close the cursor and connection
+   
+   
+    print("ADDED SUCCESSFULLYYYYY")
 cur.close()
 conn.close()
